@@ -36,16 +36,15 @@ def create_routes(db: _orm.Session, routes:_schemas.RoutesCreate):
 def get_routes(db: _orm.Session):
     return db.query(_models.Routes).all()
 
-def get_routeslist(db: _orm.Session):
-    return db.query(_models.RoutesList).all()
+def get_routeslist(db: _orm.Session, id:int):
+    return db.query(_models.RoutesList).filter(_models.RoutesList.id==id).all()
 
-def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate):
-    db_routeslist=_models.RoutesList(route_id=routeslist.route_id)
+def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id:int):
+    db_routeslist=_models.RoutesList(route_id=routeslist.route_id, id=id)
     db.add(db_routeslist)
     db.commit()
     db.refresh(db_routeslist)
     return db_routeslist
-
 
 
 def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, route_id: int):
@@ -56,4 +55,10 @@ def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, rou
     return routesinfo
 
 def get_routes_info(db: _orm.Session,  route_id: int):
-    return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()   
+    return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()  
+
+def get_routes_by_route_id(db: _orm.Session, route_id: int):
+    return db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).first()
+
+def get_routes_by_id(db: _orm.Session, id: int):
+    return db.query(_models.Routes).filter(_models.Routes.id == id).first()     
