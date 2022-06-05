@@ -66,10 +66,11 @@ def create_routes_info(id: int, route_id:int, routeinfo:_schemas.RouteInfoCreate
     if db_routesinfos2 is None :
         raise _fastapi.HTTPException(
             status_code=400, detail="woops bus with such inmatriculation nr on this route doesnt exists"
-        )  
+        )     
 
 
-    return _services.create_routes_info(db=db, routeinfo=routeinfo, route_id=route_id)     
+
+    return _services.create_routes_info(db=db, routesinfo=routeinfo,route_id=route_id, id=id)     
    
 @app.get("/routes/{id}/{route_id}", response_model=List[_schemas.RouteInfo])
 def read_routes_info(id: int, route_id:int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
@@ -83,23 +84,10 @@ def read_routes_info(id: int, route_id:int, db: _orm.Session = _fastapi.Depends(
     if db_routesinfos2 is None :
         raise _fastapi.HTTPException(
             status_code=400, detail="woops bus with such inmatriculation nr on this route doesnt exists"
-        )  
+        ) 
+         
 
     routesinfo = _services.get_routes_info(db=db, route_id=route_id)
     return routesinfo    
 
 
-
-# @app.get("/")
-
-# @app.get('/')
-# def index():
-#     return { 'data': 'blog list'}
-
-# @app.get('/{routes_id}')
-# def index(routes_id: int):
-#     return { 'routes_id': routes_id}
-
-# @app.get('/{routes_id}/{car_id}')
-# def index(routes_id: int, car_id: str):
-#     return { 'data': {'car_id': car_id, 'routes_id': routes_id}}

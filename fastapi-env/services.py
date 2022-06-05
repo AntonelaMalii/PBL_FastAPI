@@ -47,12 +47,12 @@ def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id
     return db_routeslist
 
 
-def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, route_id: int):
-    routesinfo= _models.RouteInfo(**routesinfo.dict(), owner_id=route_id)
-    db.add(routesinfo)
+def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, route_id: int, id:int):
+    db_routesinfo= _models.RouteInfo(curr_position=routesinfo.curr_position, nr_people=routesinfo.nr_people, owner_id=route_id, id=id)
+    db.add(db_routesinfo)
     db.commit()
-    db.refresh(routesinfo)
-    return routesinfo
+    db.refresh(db_routesinfo)
+    return db_routesinfo
 
 def get_routes_info(db: _orm.Session,  route_id: int):
     return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()  

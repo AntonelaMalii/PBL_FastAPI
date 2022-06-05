@@ -13,6 +13,7 @@ class RouteInfoCreate(_RouteInfoBase):
 class RouteInfo(_RouteInfoBase):
     id: int
     owner_id: int
+    # owner_route_id: int
     timestamp: _dt.datetime
 
     class Config:
