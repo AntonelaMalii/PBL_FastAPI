@@ -9,27 +9,23 @@ class Routes(_database.Base):
     id = _sql.Column(_sql.Integer, primary_key=True, index= True)
     route_nr = _sql.Column(_sql.Integer)
     # add_info = _sql.Column(_sql.String)
+    route_info = _orm.relationship("RoutesList", back_populates="owner")
 
     
 class RoutesList(_database.Base):
     __tablename__ = "routeslist"
-    route_id = _sql.Column(_sql.Integer, primary_key=True, index= True)
-    id = _sql.Column(_sql.Integer, _sql.ForeignKey("routes.id"))
-    route_info = _orm.relationship("RouteInfo", back_populates="owner")
-
-    
-
-class RouteInfo(_database.Base):
-    __tablename__="route_info"
+    route_id = _sql.Column(_sql.Integer, index= True)
     id = _sql.Column(_sql.Integer, primary_key=True, index= True)
+    owner_id=_sql.Column(_sql.Integer, _sql.ForeignKey("routes.id"))
     curr_position = _sql.Column(_sql.String, index=True)
     nr_people = _sql.Column(_sql.Integer, index=True)
-    owner_id = _sql.Column(_sql.Integer, _sql.ForeignKey("routeslist.route_id"))
-    # owner_route_id = _sql.Column(_sql.Integer, _sql.ForeignKey("routeslist.id"))
     timestamp = _sql.Column(_sql.DateTime, default = _dt.datetime.utcnow)
 
+    owner = _orm.relationship("Routes", back_populates="route_info")
+    
+    
 
-    owner = _orm.relationship("RoutesList", back_populates="route_info")
+
 
 
    

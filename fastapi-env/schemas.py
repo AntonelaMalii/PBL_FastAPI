@@ -2,25 +2,10 @@ import pydantic as _pydantic
 import datetime as _dt
 from typing import List
 
-class _RouteInfoBase(_pydantic.BaseModel):
-    curr_position: str
-    nr_people : int
-
-class RouteInfoCreate(_RouteInfoBase):
-    pass
-
-
-class RouteInfo(_RouteInfoBase):
-    id: int
-    owner_id: int
-    # owner_route_id: int
-    timestamp: _dt.datetime
-
-    class Config:
-        orm_mode = True
-
 class _RoutesListBase(_pydantic.BaseModel):
     route_id: int
+    curr_position: str
+    nr_people : int
     
 
 class RoutesListCreate(_RoutesListBase):
@@ -28,7 +13,9 @@ class RoutesListCreate(_RoutesListBase):
 
 class RoutesList(_RoutesListBase):
     id: int
-    route_info:List[RouteInfo] = []
+    owner_id: int
+    timestamp: _dt.datetime
+    
 
     class Config:
         orm_mode = True
@@ -44,6 +31,7 @@ class RoutesCreate(_RoutesBase):
 class Routes(_RoutesBase):
     id: int
     # add_info: str
+    route_info:List[RoutesList] = []
 
     class Config:
         orm_mode = True

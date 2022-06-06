@@ -37,25 +37,34 @@ def get_routes(db: _orm.Session):
     return db.query(_models.Routes).all()
 
 def get_routeslist(db: _orm.Session, id:int):
-    return db.query(_models.RoutesList).filter(_models.RoutesList.id==id).all()
+    # return db.query(_models.RoutesList).filter(_models.RoutesList.id==id).all()
+    return db.query(_models.RoutesList).filter(_models.RoutesList.owner_id == id).all()  
 
+
+def delete_duplicates(db:_orm.Session, route_id: int):
+    db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).delete()
+   
 def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id:int):
-    db_routeslist=_models.RoutesList(route_id=routeslist.route_id, id=id)
+    db_routeslist=_models.RoutesList(curr_position=routeslist.curr_position, nr_people=routeslist.nr_people,route_id=routeslist.route_id,owner_id=id)
+    delete_duplicates(db=db, route_id=routeslist.route_id)
+    # if db_routeslist2 :
+    #     db.query(_models.RoutesList).filter(_models.RoutesList.id == )
+    # #
     db.add(db_routeslist)
     db.commit()
     db.refresh(db_routeslist)
     return db_routeslist
 
 
-def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, route_id: int, id:int):
-    db_routesinfo= _models.RouteInfo(curr_position=routesinfo.curr_position, nr_people=routesinfo.nr_people, owner_id=route_id, id=id)
-    db.add(db_routesinfo)
-    db.commit()
-    db.refresh(db_routesinfo)
-    return db_routesinfo
+# def create_routes_info(db: _orm.Session,routesinfo:_schemas.RouteInfoCreate, route_id: int, id:int):
+#     db_routesinfo= _models.RouteInfo(curr_position=routesinfo.curr_position, nr_people=routesinfo.nr_people, owner_id=route_id, id=id)
+#     db.add(db_routesinfo)
+#     db.commit()
+#     db.refresh(db_routesinfo)
+#     return db_routesinfo
 
-def get_routes_info(db: _orm.Session,  route_id: int):
-    return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()  
+# def get_routes_info(db: _orm.Session,  route_id: int):
+#     return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()  
 
 def get_routes_by_route_id(db: _orm.Session, route_id: int):
     return db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).first()
