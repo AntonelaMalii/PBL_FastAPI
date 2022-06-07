@@ -45,7 +45,7 @@ def delete_duplicates(db:_orm.Session, route_id: int):
     db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).delete()
    
 def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id:int):
-    db_routeslist=_models.RoutesList(curr_position=routeslist.curr_position, nr_people=routeslist.nr_people,route_id=routeslist.route_id,owner_id=id)
+    db_routeslist=_models.RoutesList(curr_position_lat=routeslist.curr_position_lat, curr_position_long=routeslist.curr_position_long, nr_people=routeslist.nr_people,route_id=routeslist.route_id,owner_id=id)
     delete_duplicates(db=db, route_id=routeslist.route_id)
     # if db_routeslist2 :
     #     db.query(_models.RoutesList).filter(_models.RoutesList.id == )

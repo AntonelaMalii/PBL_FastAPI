@@ -3,8 +3,9 @@ import datetime as _dt
 from typing import List
 
 class _RoutesListBase(_pydantic.BaseModel):
-    route_id: int
-    curr_position: str
+    route_id: str
+    curr_position_lat: str
+    curr_position_long: str
     nr_people : int
     
 
