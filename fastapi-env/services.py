@@ -1,3 +1,4 @@
+import string
 import sqlalchemy.orm as _orm
 
 import models as _models, schemas as _schemas, database as _database
@@ -41,9 +42,17 @@ def get_routeslist(db: _orm.Session, id:int):
     return db.query(_models.RoutesList).filter(_models.RoutesList.owner_id == id).all()  
 
 
-def delete_duplicates(db:_orm.Session, route_id: int):
+def delete_duplicates(db:_orm.Session, route_id: str):
     db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).delete()
-   
+
+def delete_route(db:_orm.Session, id: int):
+    db.query(_models.Routes).filter(_models.Routes.id == id).delete()
+    db.commit()
+
+def delete_routelist(db:_orm.Session, route_id: str):
+    db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).delete()
+    db.commit()
+
 def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id:int):
     db_routeslist=_models.RoutesList(curr_position_lat=routeslist.curr_position_lat, curr_position_long=routeslist.curr_position_long, nr_people=routeslist.nr_people,route_id=routeslist.route_id,owner_id=id)
     delete_duplicates(db=db, route_id=routeslist.route_id)
@@ -66,7 +75,7 @@ def create_routeslist(db: _orm.Session, routeslist:_schemas.RoutesListCreate, id
 # def get_routes_info(db: _orm.Session,  route_id: int):
 #     return db.query(_models.RouteInfo).filter(_models.RouteInfo.owner_id == route_id).all()  
 
-def get_routes_by_route_id(db: _orm.Session, route_id: int):
+def get_routes_by_route_id(db: _orm.Session, route_id: str):
     return db.query(_models.RoutesList).filter(_models.RoutesList.route_id == route_id).first()
 
 def get_routes_by_id(db: _orm.Session, id: int):

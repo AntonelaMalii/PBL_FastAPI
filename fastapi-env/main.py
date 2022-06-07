@@ -25,6 +25,18 @@ def read_routes(db:_orm.Session = _fastapi.Depends(_services.get_db)):
     routes = _services.get_routes(db=db)
     return routes
 
+@app.delete("/routes/", response_model=_schemas.Routes)
+
+def delete_routes(id: int, db:_orm.Session= _fastapi.Depends(_services.get_db)):
+    db_routeslist = _services.get_routes_by_id(db=db, id=id)
+    if db_routeslist is None:
+        raise _fastapi.HTTPException(
+            status_code=400, detail="woops this route doesn't exists"
+        )
+
+   
+    return _services.delete_route(db=db, id=id)
+
 @app.post("/routes/{id}", response_model=_schemas.RoutesList)
 def create_routeslist(id: int, routeslist: _schemas.RoutesListCreate, db:_orm.Session= _fastapi.Depends(_services.get_db)):
     db_routeslist = _services.get_routes_by_id(db=db, id=id)
@@ -49,9 +61,29 @@ def read_routes_list(id: int, db:_orm.Session = _fastapi.Depends(_services.get_d
         raise _fastapi.HTTPException(
             status_code=400, detail="woops this route doesn't exists"
         )
+        
+
     routeslist = _services.get_routeslist(db=db, id=id)
     return routeslist
 
+
+@app.delete("/routes/{id}", response_model=_schemas.RoutesList)
+def delete_routelist(id:int, route_id: str, db:_orm.Session = _fastapi.Depends(_services.get_db)):
+    db_routeslist = _services.get_routes_by_id(db=db, id=id)
+    if db_routeslist is None:
+        raise _fastapi.HTTPException(
+            status_code=400, detail="woops this route doesn't exists"
+        )
+
+
+    db_routeslist1 = _services.get_routes_by_route_id(db=db, route_id=route_id)
+    if db_routeslist1 is None:
+        raise _fastapi.HTTPException(
+            status_code=400, detail="woops this route doesn't exists"
+        )  
+
+    return _services.delete_routelist(db=db, route_id=route_id)      
+    
 
 # @app.post("/routes/{id}/{route_id}", response_model=_schemas.RouteInfo)
 
